@@ -24,7 +24,7 @@ export function PreviewNav({
     : contract.color;
 
   const { fontFamily, baseFontSize, bodyWeight, headingWeight } = contract.typography;
-  const { borderWidth } = contract.shape;
+  const { borderWidth, focusRingWidth } = contract.shape;
   const binding = contract.componentBinding.nav.md;
   const px = contract.spacing[binding.paddingX];
   const py = contract.spacing[binding.paddingY];
@@ -45,7 +45,7 @@ export function PreviewNav({
     color: colors.primary,
     fontWeight: headingWeight,
     padding: `${py}px 0`,
-    borderBottom: `2px solid ${colors.primary}`,
+    borderBottom: `${focusRingWidth}px solid ${colors.primary}`,
     cursor: "pointer",
   };
 
@@ -53,7 +53,7 @@ export function PreviewNav({
     color: colors.textSecondary,
     fontWeight: bodyWeight,
     padding: `${py}px 0`,
-    borderBottom: "2px solid transparent",
+    borderBottom: `${focusRingWidth}px solid transparent`,
     cursor: "pointer",
   };
 

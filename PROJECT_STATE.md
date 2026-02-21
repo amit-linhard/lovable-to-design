@@ -25,25 +25,27 @@
 
 **Active Iteration:** 2
 **Active Milestone:** M2 — Canonical Preview Components
-**Active Task:** T2 ☑ Complete — ready for T3
+**Active Task:** ☑ All tasks complete — awaiting milestone merge gate (human review before merge to dev)
 **Branch:** `dev-i2`
-**Milestone Status:** In Progress (T0–T2 done; T3 not started)
-**Task Status:** T2 ☑ Complete
+**Milestone Status:** ☑ Verification Pass — ready for merge
+**Task Status:** ☑ All 4 tasks complete
 
 ---
 
 ## Last Completed Work
 
-**M2 T2 Input & Nav — Session 3** (2026-02-22)
+**M2 T3 Token Audit + Verification — Session 3** (2026-02-22)
 
-M2 Task 2: Implemented PreviewInput and PreviewNav with full token application.
+M2 Task 3: Audited all 5 components for hardcoded values; fixed PreviewNav active
+indicator from hardcoded `2px` to `contract.shape.focusRingWidth`. Added
+ComponentPreview integration tests (FineTune accent-override scenario). M2 verified.
 
 Files modified:
-- `src/components/preview/PreviewInput.tsx` — border/radius/focus-ring from contract; focused prop
-- `src/components/preview/PreviewNav.tsx` — surface bg, active/inactive item styles, gap from componentBinding.nav.md
-- `src/components/preview/preview.test.tsx` — added 16 tests (input 8, nav 8); total 37
+- `src/components/preview/PreviewNav.tsx` — active indicator uses focusRingWidth from contract
+- `src/components/preview/PreviewButton.tsx` — comment justifying #FFFFFF (no onPrimary token)
+- `src/components/preview/preview.test.tsx` — 5 ComponentPreview integration tests added; total 42
 
-Verification: `npm run typecheck` → clean; `npm test` → 62/62 pass
+Verification: `npm run typecheck` → clean; `npm test` → 67/67 pass
 
 ---
 
@@ -96,7 +98,7 @@ project-root/
 | Milestone | Name | Status | Branch | Tasks Done / Total |
 | --- | --- | --- | --- | --- |
 | M1 | Foundation & Data Model | ☑ Complete | `dev-i1` | 4/4 (awaiting merge gate) |
-| M2 | Canonical Preview Components | In Progress | `dev-i2` | 3/4 |
+| M2 | Canonical Preview Components | ☑ Complete | `dev-i2` | 4/4 (awaiting merge gate) |
 | M3 | Theme Library & Browse Screen | Not Started | `dev-i3` | 0/4 |
 | M4 | Preview Flow & Optional Brand Color | Not Started | `dev-i4` | 0/4 |
 | M5 | Output Format & Export | Not Started | `dev-i5` | 0/4 |
@@ -140,6 +142,7 @@ project-root/
 | 3 | 2026-02-21 | M2 T0 skeleton | ⏸ T0 skeleton gate | Created src/components/preview/ with 7 files (5 stubs + ComponentPreview + barrel). Typecheck clean; 25/25 pass. | Branch: dev-i2 |
 | 4 | 2026-02-22 | M2 T1 Button & Card | T2 next | Implemented PreviewButton/PreviewCard/PaletteStrip + 21 tests + jest-dom setup. | 46/46 pass |
 | 5 | 2026-02-22 | M2 T2 Input & Nav | T3 next | Implemented PreviewInput (focused state) + PreviewNav (active item). 16 new tests. | 62/62 pass |
+| 6 | 2026-02-22 | M2 T3 Token audit | ⏸ merge gate | Fixed PreviewNav hardcoded 2px. ComponentPreview integration tests. M2 verified. | 67/67 pass |
 
 ---
 
@@ -156,6 +159,20 @@ For the agent starting a new session:
 - Human reviews `src/components/preview/` stubs.
 - On approval: proceed to T1 (Button & Card + PaletteStrip).
 
-**To resume T1:**
-Open `docs/milestones/milestone-2.md` → Task 1.
-Key reminders: PreviewCard uses `contract.elevation.sm`; PaletteStrip renders all 9 ColorTokens keys; colorOverride merges into effectiveColors (never mutate contract).
+**M2 is at the merge gate (verification passed):**
+- All postconditions OC-1–OC-2 verified. 67 tests pass. Typecheck clean.
+- Human must approve merge. Then:
+```bash
+git checkout dev
+git pull origin dev
+git merge dev-i2
+git push origin dev
+```
+
+**If starting M3 (after M2 merged to dev):**
+```bash
+git checkout dev && git pull origin dev
+git checkout -b dev-i3
+git push -u origin dev-i3
+```
+Note: M3 T1 (theme content) is pre-complete — themes.ts already has full token data.

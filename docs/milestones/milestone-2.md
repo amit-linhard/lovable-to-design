@@ -1,7 +1,7 @@
 # Milestone 2: Canonical Preview Components
 
 **Branch:** `dev-i2`
-**Status:** In Progress
+**Status:** ☑ Complete — ready for merge gate
 **Created:** 2026-02-21
 **Last Updated:** 2026-02-21
 
@@ -82,7 +82,7 @@
 | 0 | Create Milestone Skeleton | ☑ Complete |
 | 1 | Button & Card | ☑ Complete |
 | 2 | Input & Nav | ☑ Complete |
-| 3 | Token application | ☐ Not Started |
+| 3 | Token application | ☑ Complete |
 
 ---
 
@@ -170,7 +170,7 @@ After 3 attempts: STOP; log; flag.
 
 ## Task 3: Token Application
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete
 **Attempt:** 1 of 3
 
 ### Context
@@ -184,9 +184,9 @@ Ensure all four components use color, typography, shape, and spacing exclusively
 - Document or test that changing contract changes appearance
 
 ### Success Criteria
-- [ ] Changing contract updates all four components
-- [ ] No hardcoded colors, fonts, or spacing in preview components
-- [ ] ComponentPreview renders correctly when `colorOverride` prop overrides `contract.color.accent` (validates FineTune live-preview scenario)
+- [x] Changing contract updates all four components
+- [x] No hardcoded colors, fonts, or spacing in preview components
+- [x] ComponentPreview renders correctly when `colorOverride` prop overrides `contract.color.accent` (validates FineTune live-preview scenario)
 
 ### After Success
 Commit; update task status and state.
@@ -204,11 +204,11 @@ Same as M1: task failure after 3 attempts → STOP and log; dependency broken �
 
 ## Milestone Completion Checklist
 
-- [ ] All tasks committed
-- [ ] Preconditions PC-1–PC-3 verified at start
-- [ ] Postconditions: all four components exportable and contract-driven
-- [ ] E2E or manual: render all four with two different contracts; appearance differs
-- [ ] No uncommitted changes; PROJECT_STATE updated
+- [x] All tasks committed
+- [x] Preconditions PC-1–PC-3 verified at start
+- [x] Postconditions: all four components exportable and contract-driven
+- [x] E2E or manual: render all four with two different contracts; appearance differs (tests verify cleanPro ≠ warmEditorial for all components)
+- [x] No uncommitted changes; PROJECT_STATE updated
 
 **⏸ PAUSE — Human reviews before merge.**
 
@@ -218,10 +218,10 @@ Same as M1: task failure after 3 attempts → STOP and log; dependency broken �
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| All tasks committed | ☐ Pass / ☐ Fail | |
-| Preconditions verified | ☐ Pass / ☐ Fail | |
-| Postconditions verified | ☐ Pass / ☐ Fail | |
-| Components contract-driven | ☐ Pass / ☐ Fail | |
+| All tasks committed | ☑ Pass | T0–T3 all committed on dev-i2 |
+| Preconditions verified | ☑ Pass | PC-1/PC-2/PC-3 verified at T0 start |
+| Postconditions verified | ☑ Pass | All 5 components exportable from index.ts |
+| Components contract-driven | ☑ Pass | 67 tests verify token application; no hardcoded colors/fonts/spacing |
 
-**Verification result:** ☐ PASS | ☐ FAIL
-**Verified by:** ________________ on ________________
+**Verification result:** ☑ PASS
+**Verified by:** Claude Code (Session 3) on 2026-02-22

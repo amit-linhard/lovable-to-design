@@ -1,4 +1,4 @@
-// M2 — Tests for PreviewButton, PreviewCard, PaletteStrip, PreviewInput, PreviewNav
+// M2 — Tests for PreviewButton, PreviewCard, PaletteStrip, PreviewInput, PreviewNav, ComponentPreview
 import { describe, it, expect, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 afterEach(cleanup);
@@ -9,6 +9,7 @@ import { PreviewCard } from "./PreviewCard";
 import { PaletteStrip } from "./PaletteStrip";
 import { PreviewInput } from "./PreviewInput";
 import { PreviewNav } from "./PreviewNav";
+import { ComponentPreview } from "./ComponentPreview";
 
 // ─── PreviewButton ────────────────────────────────────────────────────────────
 
@@ -284,5 +285,50 @@ describe("PreviewNav", () => {
     const navA = a.querySelector("[data-testid='preview-nav']")! as HTMLElement;
     const navB = b.querySelector("[data-testid='preview-nav']")! as HTMLElement;
     expect(navA.style.fontFamily).not.toBe(navB.style.fontFamily);
+  });
+});
+
+// ─── ComponentPreview (T3: colorOverride integration) ────────────────────────
+
+describe("ComponentPreview", () => {
+  it("renders all five sub-components without error", () => {
+    const { container } = render(<ComponentPreview contract={cleanPro} />);
+    expect(container.querySelector("button")).toBeTruthy();
+    expect(container.querySelector("[data-testid='preview-card']")).toBeTruthy();
+    expect(container.querySelector("[data-testid='preview-input']")).toBeTruthy();
+    expect(container.querySelector("[data-testid='preview-nav']")).toBeTruthy();
+    expect(container.querySelector("[data-testid='palette-strip']")).toBeTruthy();
+  });
+
+  it("FineTune scenario: colorOverride accent updates PaletteStrip accent swatch", () => {
+    const { container } = render(
+      <ComponentPreview contract={cleanPro} colorOverride={{ accent: "#FF4500" }} />
+    );
+    const accentSwatch = container.querySelector(
+      "[data-color-key='accent'] [data-color-value]"
+    )! as HTMLElement;
+    expect(accentSwatch).toHaveStyle({ backgroundColor: "#FF4500" });
+  });
+
+  it("colorOverride primary changes primary button background", () => {
+    const { container } = render(
+      <ComponentPreview contract={cleanPro} colorOverride={{ primary: "#00AA55" }} />
+    );
+    const primaryBtn = container.querySelector("[data-variant='primary']")! as HTMLElement;
+    expect(primaryBtn).toHaveStyle({ backgroundColor: "#00AA55" });
+  });
+
+  it("without colorOverride uses contract tokens unchanged", () => {
+    const { container } = render(<ComponentPreview contract={cleanPro} />);
+    const primaryBtn = container.querySelector("[data-variant='primary']")! as HTMLElement;
+    expect(primaryBtn).toHaveStyle({ backgroundColor: cleanPro.color.primary });
+  });
+
+  it("renders visually differently for warmEditorial vs cleanPro", () => {
+    const { container: a } = render(<ComponentPreview contract={cleanPro} />);
+    const { container: b } = render(<ComponentPreview contract={warmEditorial} />);
+    const btnA = a.querySelector("[data-variant='primary']")! as HTMLElement;
+    const btnB = b.querySelector("[data-variant='primary']")! as HTMLElement;
+    expect(btnA.style.fontFamily).not.toBe(btnB.style.fontFamily);
   });
 });

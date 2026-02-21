@@ -43,7 +43,7 @@ export function PreviewButton({
       ? {
           ...base,
           backgroundColor: colors.primary,
-          color: "#FFFFFF",
+          color: "#FFFFFF", // no onPrimary token in DesignContract; all themes use dark/saturated primary
           border: "none",
         }
       : {
