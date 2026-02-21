@@ -37,7 +37,8 @@
 
 | Source | What Changed | Impact on This Milestone | Date |
 | --- | --- | --- | --- |
-| — | No changes | — | — |
+| Session 2 extraction | Theme count: M1 spec = 4 themes; Lovable validated 8 (different names). **Decision: keep 4 M1 themes.** | T1 is pre-complete (themes.ts already has full token data) | 2026-02-21 |
+| Session 2 extraction | On theme selection: must reset colorOverride to null | Add to T3 "Browse Grid & Selection" | 2026-02-21 |
 
 ---
 
@@ -177,6 +178,7 @@ Compose browse screen: grid of four theme cards; selection updates state so M4 (
 ### What to Build
 - Browse screen: grid layout of four theme cards (responsive if needed)
 - On card select: set selected theme in app state (or URL); ensure M4/M5 can read it
+- On card select: also reset colorOverride to null — prevents stale override from prior theme carrying into FineTune
 - Optional: highlight selected card; “Preview” or “Next” to go to preview (navigation can be wired in M4)
 
 ### Success Criteria

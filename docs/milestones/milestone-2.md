@@ -25,6 +25,8 @@
 - PreviewInput (border, radius, focus state)
 - PreviewNav (background, item spacing, active state)
 - All accept DesignContract (or slice) and apply tokens
+- PaletteStrip component (row of labeled color swatches from ColorTokens) — used by Browse, Preview, and Export screens
+- Preview components accept optional `colorOverride?: Partial<ColorTokens>` prop — required for FineTune live preview (user sees accent change in real time)
 
 ### Explicitly Out of Scope
 - Browse grid or theme cards (M3)
@@ -37,7 +39,7 @@
 
 | Source | What Changed | Impact on This Milestone | Date |
 | --- | --- | --- | --- |
-| — | No changes | — | — |
+| Session 2 extraction | Added PaletteStrip to scope; added optional colorOverride prop requirement for live preview | Task 1 now includes PaletteStrip; Task 3 must verify colorOverride scenario | 2026-02-21 |
 
 ---
 
@@ -121,12 +123,14 @@ Implement PreviewButton (primary + ghost) and PreviewCard per PRD. They must rea
 
 ### What to Build
 - **PreviewButton:** primary and ghost variants; fill, radius, type weight from contract
-- **PreviewCard:** surface color, elevation, padding from scale; label/value hierarchy
+- **PreviewCard:** surface color, `elevation.sm` for box-shadow, padding from scale; label/value hierarchy
+- **PaletteStrip:** `(colors: ColorTokens, size: "sm" | "md") => JSX` — labeled swatches; used by Browse, Preview, Export
 Apply contract tokens; no hardcoded colors or spacing.
 
 ### Success Criteria
 - Both components render with at least one sample contract; variants switch correctly
 - Visual check: colors and spacing come from contract
+- PaletteStrip renders swatches for all color keys at both sizes
 
 ### After Success
 Commit; update task status and state.
@@ -182,6 +186,7 @@ Ensure all four components use color, typography, shape, and spacing exclusively
 ### Success Criteria
 - [ ] Changing contract updates all four components
 - [ ] No hardcoded colors, fonts, or spacing in preview components
+- [ ] ComponentPreview renders correctly when `colorOverride` prop overrides `contract.color.accent` (validates FineTune live-preview scenario)
 
 ### After Success
 Commit; update task status and state.

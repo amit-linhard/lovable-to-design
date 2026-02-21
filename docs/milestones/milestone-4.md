@@ -36,7 +36,8 @@
 
 | Source | What Changed | Impact on This Milestone | Date |
 | --- | --- | --- | --- |
-| — | No changes | — | — |
+| Session 2 extraction | T2: "Token values on hover" replaced by static token sidebar on Preview screen — simpler validated UX | T2 implementation is significantly simpler; no hover-inspector infrastructure needed | 2026-02-21 |
+| Session 2 extraction | T3: Brand color override confirmed accent-only; UX includes hue slider + hex input + 6 suggested pairings + "Skip" link | Spec now explicit; hue slider is validated pattern | 2026-02-21 |
 
 ---
 
@@ -136,26 +137,28 @@ After 3 attempts: STOP; log; flag.
 
 ---
 
-## Task 2: Token Values on Hover
+## Task 2: Token Sidebar on Preview Screen
 
 **Status:** ☐ Not Started
 **Attempt:** 1 of 3
 
 ### Context
-PRD: token values visible on hover. User should see which token (e.g. primary, border-radius) applies and its value.
+Validated UX (Session 2): the Preview screen shows a static token sidebar listing key token values, each with a lock icon (🔒) indicating it cannot be changed here. This replaces the PRD’s hover-inspector approach — the Lovable prototype confirmed the simpler static sidebar is sufficient and cleaner.
 
 ### Preconditions
 | TP-1 | Task 1 complete | Full preview screen works |
 
 ### What to Build
-- On hover over relevant elements (e.g. button, card surface, input border, nav item): show token name and value (e.g. “primary: #0f172a”, “borderRadius: 0.5rem”)
-- Implementation: tooltip, overlay, or sidebar; ensure it doesn’t block interaction
-- Cover at least color, typography, shape, spacing where meaningful
+- Static token sidebar panel on the Preview screen
+- Lists: Font family, Base font size, Line height, Heading weight, Radius (display value), Spacing unit
+- Each row: label + value + 🔒 lock icon
+- Values sourced from `selectedTheme` contract fields
+- No hover interactions or tooltips needed
 
 ### Success Criteria
-- [ ] Hovering over key elements shows token info
-- [ ] Values match the current contract
-- [ ] UX is clear and non-intrusive
+- [ ] Sidebar visible alongside ComponentPreview on Preview screen
+- [ ] All 6 token rows present with correct values from contract
+- [ ] Values update when a different theme is selected
 
 ### After Success
 Commit; update task status and state.
@@ -171,16 +174,22 @@ After 3 attempts: STOP; log; flag.
 **Attempt:** 1 of 3
 
 ### Context
-PRD: within selected theme, user can swap one palette tone for a brand color. Font pairing and shape tokens stay locked.
+Validated UX (Session 2): FineTune screen allows swapping the `accent` token only. Typography, shape, spacing, and elevation stay locked. UI confirmed: hue slider (0–360 → HSL→hex), native color picker, hex text input, 6 suggested pairings (derived from theme’s accent + primary). “Apply & Continue” saves override; “Skip this step →” clears it.
 
 ### Preconditions
-| TP-1 | Task 1 and 2 complete | Preview and token hover work |
+| TP-1 | Task 1 and 2 complete | Preview screen and token sidebar work |
 
 ### What to Build
-- UI to set one “brand color” (e.g. color picker or hex input)
-- Map brand color to one token (e.g. accent or primary) in a **copy** of the selected theme’s contract
-- Preview and (later) export use this overridden contract; curated theme data is never mutated
-- If user clears override, use original theme contract
+- FineTune screen (Step 3): accent color swap only
+- Hue slider (full spectrum gradient background, 0–360)
+- Hex color picker (native `<input type=”color”>`) + hex text input (synchronized)
+- 6 suggested pairings: derived from `selectedTheme.color.accent` and `selectedTheme.color.primary`
+- Locked tokens panel showing typography, radius, spacing, elevation (sm/md/lg) — visual but immutable
+- Live ComponentPreview on right using `effectiveColors = { ...contract.color, accent: hexValue }`
+- “Apply & Continue”: write `colorOverride = { key: “accent”, value: hexValue }`, navigate to `/output-format`
+- “Skip this step →”: write `colorOverride = null`, navigate to `/output-format`
+- On load: pre-populate from `colorOverride?.value` if user navigated back; else `selectedTheme.color.accent`
+- **Never mutate the curated theme** — override is ephemeral state only
 
 ### Success Criteria
 - [ ] User can set one brand color; preview updates

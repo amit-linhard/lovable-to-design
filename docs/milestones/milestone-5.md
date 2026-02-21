@@ -9,22 +9,25 @@
 
 ## Milestone Objective
 
-**Primary Goal:** User selects output format (Tailwind / CSS Variables / shadcn/ui); app renders the selected theme (with optional override) into that format; copy-to-clipboard and download.
+**Primary Goal:** User selects one or more output formats (Tailwind / CSS Variables / shadcn/ui — all pre-selected by default); app generates all selected formats and packages them into a .zip bundle; per-format copy-to-clipboard and bulk zip download both work.
 
-**Why Now:** M4 delivers committed theme (with optional brand color). This completes the flow: browse → preview → export.
+**Why Now:** M4 delivers committed theme (with optional brand color). This completes the flow: browse → preview → fine-tune → output format → export.
 
-**Success Definition:** User can choose Tailwind, CSS Vars, or shadcn; receive a paste-ready file; copy and download both work.
+**Success Definition:** User multi-selects formats on OutputFormat screen (Step 4); arrives at Export screen (Step 5) seeing tabbed code and a mini preview; can copy any single format or download all as .zip.
 
 ---
 
 ## Scope & Boundaries
 
 ### In Scope
-- Output format dropdown: Tailwind, CSS Variables, shadcn/ui
-- Three renderers: DesignContract → string per format
-- Copy-to-clipboard and file download
-- Export screen reachable from preview (or as final step)
+- **OutputFormat screen (Step 4):** Multi-select card grid (Tailwind, CSS Variables, shadcn/ui). All 3 pre-selected by default. Disabled "Generate Bundle" if 0 selected. Inline error if empty selection.
+- **Export screen (Step 5):** Tabbed code display (one tab per selected format). Summary strip (theme name, font, radius, spacing, PaletteStrip with effective colors). Mini ComponentPreview. Download .zip + copy active tab.
+- Three renderers: `(contract: DesignContract, effectiveColors: ColorTokens) => string` per format
+- Download: JSZip bundle — `{theme.id}-theme.zip` — containing one file per selected format
+- Copy: active format tab only (not the zip)
+- ExportFormat: `"tailwind" | "css-vars" | "shadcn"` (UI label "CSS Variables"; file name `variables.css`)
 - Paste-ready output (no interpretation required)
+- JSZip dependency required
 
 ### Explicitly Out of Scope
 - Bootstrap / MUI / other formats (v2)
@@ -37,7 +40,9 @@
 
 | Source | What Changed | Impact on This Milestone | Date |
 | --- | --- | --- | --- |
-| — | No changes | — | — |
+| Session 2 extraction | Export is a **bundle** (multi-select → .zip), not a single-format dropdown | All tasks updated; T0 scaffolds two routes; T1 renderer mapping table added; T2–T3 scope changed | 2026-02-21 |
+| Session 2 extraction | Two screens instead of one: `/output-format` (Step 4) + `/export` (Step 5) | T0 must scaffold both routes | 2026-02-21 |
+| Session 2 extraction | DesignContract→output field mapping confirmed; color field names differ from Lovable | T1 must use mapping table below | 2026-02-21 |
 
 ---
 
@@ -54,10 +59,11 @@
 
 | # | What Will Exist | Consumed By | How to Verify |
 | --- | --- | --- | --- |
-| OC-1 | Format selector (Tailwind / CSS Vars / shadcn) in UI | — | Export screen has dropdown |
-| OC-2 | Three output generators; each returns paste-ready string | — | Each format produces valid, usable output |
-| OC-3 | Copy-to-clipboard and download both work | — | User can copy and download with correct filename |
-| OC-4 | Export screen reachable from flow | — | User can complete browse → preview → export |
+| OC-1 | OutputFormat screen (Step 4): multi-select card grid; all 3 pre-selected by default | — | Navigate to /output-format; see 3 cards all checked |
+| OC-2 | Three output generators; each returns paste-ready string from DesignContract | — | Each format produces valid, usable output |
+| OC-3 | Copy active format to clipboard; download ALL selected formats as .zip (`{theme.id}-theme.zip`) | — | Copy puts single file content in clipboard; download produces zip with N files |
+| OC-4 | Full flow reachable: browse → preview → fine-tune → output-format → export | — | User can complete all 5 steps end to end |
+| OC-5 | Export screen (Step 5): tabbed code display, summary strip, mini preview, download + copy buttons | — | Navigate to /export; see tabs matching selected formats |
 
 ---
 
@@ -66,12 +72,40 @@
 ### Key Decisions
 | Decision | Choice Made | Why |
 | --- | --- | --- |
-| Renderers | Pure functions: (contract: DesignContract, format: ExportConfig['format']) => string | Testable; no UI in renderer |
-| Download | Blob + anchor; filename by format (e.g. tailwind.config.js, theme.css) | PRD: paste-ready; framework-specific names |
-| Copy | navigator.clipboard.writeText | Standard; fallback optional |
+| Renderers | Pure functions: `(contract: DesignContract, effectiveColors: ColorTokens) => string` | Testable; no UI in renderer; effectiveColors is pre-applied by caller |
+| Output format | Bundle (.zip via JSZip) with per-format files; also per-format copy | Validated by Lovable UX: multi-format is the default, not an option |
+| Download | JSZip → Blob → anchor click; filename: `{theme.id}-theme.zip` | Consistent with validated UX |
+| Copy | navigator.clipboard.writeText of active tab's string only | Per-format copy is simpler; zip handles the bundle |
+| Field mapping | DesignContract fields → output format names per table below | Prevents renderer bugs |
+
+### Renderer Field Mapping (DesignContract → output)
+
+| DesignContract field | Tailwind key | CSS var name | shadcn var name |
+|---|---|---|---|
+| `color.primary` | `primary` | `--color-primary` | `--primary` (HSL) |
+| `color.secondary` | `secondary` | `--color-secondary` | `--secondary` (HSL) |
+| `color.accent` | `accent` | `--color-accent` | `--accent` (HSL) |
+| `color.background` | `background` | `--color-background` | `--background` (HSL) |
+| `color.textPrimary` | `foreground` | `--color-foreground` | `--foreground` (HSL) |
+| `color.textSecondary` | `muted` | `--color-muted` | `--muted` (HSL) |
+| `color.border` | `border` | `--color-border` | `--border` (HSL) |
+| `typography.fontFamily` | `fontFamily.sans` | `--font-family` | (not in shadcn vars) |
+| `typography.baseFontSize` (number) | `fontSize.base` as `"{n}px"` | `--font-size-base` as `"{n}px"` | (not in shadcn vars) |
+| `typography.bodyLineHeight` (number) | (not in tailwind extend) | `--line-height-base` | (not in shadcn vars) |
+| `typography.headingWeight` (number) | (not in tailwind extend) | `--font-weight-heading` | (not in shadcn vars) |
+| `shape.radiusMd` (number) | `borderRadius.DEFAULT` as `"{n}px"` | `--radius` as `"{n}px"` | `--radius` as `"{n}px"` |
+| `spacing.xs` (number = 4) | `spacing.unit` as `"4px"` | `--spacing-unit` as `"4px"` | (not in shadcn vars) |
+| `elevation.sm/md/lg` | `boxShadow.sm/md/lg` | `--shadow-sm/md/lg` | (not in shadcn vars) |
+
+### File Names per Format
+| ExportFormat | File in zip | Copy label |
+|---|---|---|
+| `"tailwind"` | `tailwind.config.js` | "Copy tailwind.config.js" |
+| `"css-vars"` | `variables.css` | "Copy variables.css" |
+| `"shadcn"` | `shadcn-theme.css` | "Copy shadcn-theme.css" |
 
 ### System Areas Affected
-**New Modules:** Export renderers (tailwind, css-vars, shadcn), export page, format selector component
+**New Modules:** Export renderers (`src/lib/renderers/tailwind.ts`, `css-vars.ts`, `shadcn.ts`), OutputFormat page (`/output-format`), Export page (`/export`)
 
 ---
 
@@ -92,19 +126,20 @@
 **Attempt:** 1 of 3
 
 ### Context
-Scaffold export screen, format selector, and renderer stubs. No real output yet.
+Scaffold TWO route screens and renderer stubs. No real output yet.
 
 ### What to Produce
-- Export route/page with placeholder for format dropdown and output area
-- Three renderer modules or functions with signature `(contract: DesignContract) => string` returning stub strings
-- Format type from M1 (ExportConfig) used in selector
+- `/output-format` page (Step 4): placeholder for 3 format cards; "Generate Bundle" CTA stub
+- `/export` page (Step 5): placeholder for tabbed code area, summary strip, download/copy buttons
+- Three renderer stubs with correct signature: `(contract: DesignContract, effectiveColors: ColorTokens) => string`
+- JSZip installed in package.json
 
 ### Success Criteria
-- Export page loads; dropdown and stubs exist; TypeScript compiles
-- No paste-ready content yet
+- Both pages load and are reachable in sequence; TypeScript compiles
+- Renderer signatures match; no paste-ready content yet
 
 ### After Success
-Commit: `chore(milestone-5): scaffold skeleton — export screen and renderer stubs`
+Commit: `chore(milestone-5): scaffold skeleton — output-format and export screens, renderer stubs`
 **⏸ PAUSE — Human reviews skeleton.**
 
 ---
@@ -121,11 +156,12 @@ Implement three renderers so the app can produce paste-ready Tailwind config, CS
 | TP-1 | Task 0 complete; M1 DesignContract and ExportConfig types available | Types and stubs exist |
 
 ### What to Build
-- **Tailwind:** Generate `tailwind.config.js` (or .ts) with theme extension: colors, fontFamily, borderRadius, spacing, etc. from contract
-- **CSS Variables:** Generate `:root { ... }` with CSS custom properties for colors, spacing, typography, shape
-- **shadcn/ui:** Generate component theme override block (variables or config) that shadcn expects
-- Each renderer: input = DesignContract (with any overrides from M4); output = string; no UI logic
-- Output must be valid and paste-ready (run through linter or manual check)
+- **Tailwind renderer:** `tailwind.config.js` with `theme.extend` — colors, fontFamily, fontSize, borderRadius, spacing, boxShadow from contract. Use field mapping table.
+- **CSS Variables renderer:** `:root { ... }` block — CSS custom properties for colors, typography, radius, spacing, elevation. Use field mapping table.
+- **shadcn/ui renderer:** `globals.css` `@layer base` block — HSL-converted color variables as shadcn expects. Hex → HSL conversion required.
+- Each renderer: `(contract: DesignContract, effectiveColors: ColorTokens) => string`; no UI logic; pure function
+- `effectiveColors` is the caller's responsibility (may differ from `contract.color` if accent was overridden)
+- Output must be valid and paste-ready
 
 ### Success Criteria
 - [ ] Each renderer returns a string that is valid for the target format
@@ -153,16 +189,23 @@ Export screen: user chooses format; app displays or previews generated output; p
 | TP-2 | Committed theme available from M4 | State or context provides contract |
 
 ### What to Build
-- Format selector: dropdown or tabs for Tailwind / CSS Variables / shadcn
-- On format change: run appropriate renderer with current committed contract; show result in text area or code block
-- Optional: live preview of file (per PRD open question); if out of scope, show output text only
-- Copy and Download buttons (wire in Task 3)
-- Navigation: from preview to export; or export as final step in flow
+- **OutputFormat screen (Step 4):**
+  - 3 format cards (Tailwind, CSS Variables, shadcn/ui) in card grid, all pre-selected by default
+  - Toggle-selectable; check mark on selected state
+  - "Generate Bundle" button: enabled only if ≥1 format selected; disabled + inline error if 0
+  - Back → `/fine-tune`
+- **Export screen (Step 5):**
+  - Summary strip: theme name, font, radius, spacing, PaletteStrip (effective colors)
+  - Mini ComponentPreview with effective colors
+  - Tab bar (one tab per selected format showing filename)
+  - Code block: shows generated string for active tab
+  - Copy button (active tab), Download .zip button (all selected)
+  - Back → `/output-format`; "Pick Different Theme" → `/`
 
 ### Success Criteria
-- [ ] Selecting format updates displayed output
-- [ ] Output matches selected format and current contract
-- [ ] Export screen is reachable after preview (or from browse if flow is linear)
+- [ ] OutputFormat shows 3 cards all pre-selected; toggles work; empty-selection error shows
+- [ ] Export shows tabs matching selected formats; code block updates on tab switch
+- [ ] Output reflects current contract + colorOverride
 
 ### After Success
 Commit; update task status and state.
@@ -185,14 +228,14 @@ Copy-to-clipboard and file download must work with correct content and filenames
 | TP-2 | Renderers produce final string | Output is current when format or theme changes |
 
 ### What to Build
-- **Copy:** On “Copy” click, write current output string to clipboard (navigator.clipboard.writeText); show brief feedback (e.g. “Copied”)
-- **Download:** On “Download” click, create blob with current output; suggest filename by format (e.g. tailwind.config.js, theme.css, shadcn-theme.css or similar)
-- Ensure content is the same as displayed (no stale data)
-- Handle errors (e.g. clipboard denied) gracefully
+- **Copy:** `navigator.clipboard.writeText(activeCode)` for the active tab's string; show “Copied!” feedback for ~2s; catch clipboard-denied errors gracefully
+- **Download .zip:** Use JSZip to package all selected formats (each using its file name from mapping table); `zip.generateAsync({ type: “blob” })` → Blob URL → anchor click → `URL.revokeObjectURL`; filename: `{theme.id}-theme.zip`
+- Ensure rendered strings are always current (re-compute on theme/format/override change, not cached)
+- Handle errors: clipboard denied → catch + show error message
 
 ### Success Criteria
-- [ ] Copy puts correct output in clipboard; paste in target project works
-- [ ] Download produces file with correct content and sensible filename
+- [ ] Copy puts correct single-format output in clipboard; paste in target project works
+- [ ] Download produces `{theme.id}-theme.zip` containing one file per selected format with correct content
 - [ ] Feedback on copy success/failure
 - [ ] No uncommitted changes; PROJECT_STATE updated
 
