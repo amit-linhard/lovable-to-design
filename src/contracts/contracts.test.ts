@@ -70,6 +70,14 @@ describe("theme registry", () => {
 
       // Component binding
       expect(t.componentBinding.button.md).toHaveProperty("paddingX");
+
+      // Elevation (OC-5) — three CSS box-shadow strings
+      expect(typeof t.elevation.sm).toBe("string");
+      expect(typeof t.elevation.md).toBe("string");
+      expect(typeof t.elevation.lg).toBe("string");
+      expect(t.elevation.sm.length).toBeGreaterThan(0);
+      expect(t.elevation.md.length).toBeGreaterThan(0);
+      expect(t.elevation.lg.length).toBeGreaterThan(0);
     });
   });
 });

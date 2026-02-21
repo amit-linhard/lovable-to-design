@@ -1,7 +1,7 @@
 # Milestone 1: Foundation & Data Model
 
 **Branch:** `dev-i1`
-**Status:** Not Started
+**Status:** Complete
 **Created:** 2026-02-21
 **Last Updated:** 2026-02-21
 
@@ -21,6 +21,7 @@
 
 ### In Scope
 - DesignContract and nested token types (ColorTokens, TypographyTokens, ShapeTokens, SpacingScale, ComponentBinding)
+- ElevationTokens (sm/md/lg box-shadow scale) — confirmed required by Session 2 extraction (FineTune locked-token panel + Export renderers)
 - ExportConfig type (output format: tailwind | css-vars | shadcn)
 - 4px base spacing scale and named steps
 - Theme data module with structure for four themes (stub or minimal content)
@@ -37,7 +38,7 @@
 
 | Source | What Changed | Impact on This Milestone | Date |
 | --- | --- | --- | --- |
-| — | No changes | — | — |
+| Session 2 extraction | Added `ElevationTokens` interface + `elevation` field to `DesignContract`; added elevation values to all 4 theme stubs | New OC-5; tests extended; no breaking changes to OC-1–OC-4 | 2026-02-21 |
 
 ---
 
@@ -45,7 +46,7 @@
 
 | # | Requirement | Provided By | How to Verify | Status |
 | --- | --- | --- | --- | --- |
-| PC-1 | None — first milestone | — | N/A | ☐ Not Checked |
+| PC-1 | None — first milestone | — | N/A | ☑ N/A |
 
 ---
 
@@ -57,6 +58,7 @@
 | OC-2 | ExportConfig type (tailwind \| css-vars \| shadcn) | M5 | Type present and used in type exports |
 | OC-3 | 4px spacing scale constants and named steps | M2, M3 | Scale exported; component binding map (sm/md/lg) defined |
 | OC-4 | Theme data structure (file/module) ready for four themes | M3 | Theme array or map with correct shape; can add entries |
+| OC-5 | ElevationTokens interface + `elevation` field on DesignContract; all 4 themes have elevation values | M4, M5 | `t.elevation.sm/md/lg` are non-empty strings; tests pass |
 
 ---
 
@@ -90,16 +92,16 @@ This milestone consists of **4 tasks** (Task 0 + 3 implementation tasks).
 
 | Task # | Name | Status |
 | --- | --- | --- |
-| 0 | Create Milestone Skeleton | ☐ Not Started |
-| 1 | Design contract types | ☐ Not Started |
-| 2 | Spacing scale | ☐ Not Started |
-| 3 | Theme data shape | ☐ Not Started |
+| 0 | Create Milestone Skeleton | ☑ Complete (skeleton approved; Session 2 triggered elevation addition) |
+| 1 | Design contract types | ☑ Complete |
+| 2 | Spacing scale | ☑ Complete |
+| 3 | Theme data shape | ☑ Complete |
 
 ---
 
 ## Task 0: Create Milestone Skeleton
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete — skeleton approved; elevation addition completed in Session 2 verification
 **Attempt:** 1 of 3
 
 ### Context
@@ -127,7 +129,7 @@ git push origin dev-i1
 
 ## Task 1: Design Contract Types
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete
 **Attempt:** 1 of 3
 
 ### Context
@@ -172,7 +174,7 @@ After 3 attempts: STOP; log in PROJECT_STATE.md; flag for human review.
 
 ## Task 2: Spacing Scale
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete
 **Attempt:** 1 of 3
 
 ### Context
@@ -202,7 +204,7 @@ After 3 attempts: STOP; log; flag.
 
 ## Task 3: Theme Data Shape
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete
 **Attempt:** 1 of 3
 
 ### Context
@@ -240,11 +242,11 @@ After 3 attempts: STOP; log; flag.
 
 ## Milestone Completion Checklist
 
-- [ ] All tasks marked complete and committed
-- [ ] Preconditions verified (N/A for M1)
-- [ ] Postconditions: OC-1–OC-4 verifiable (imports, types, scale, theme structure)
-- [ ] No uncommitted changes
-- [ ] PROJECT_STATE.md updated if present
+- [x] All tasks marked complete and committed (T0 skeleton approved; T1–T3 complete; elevation added in verification)
+- [x] Preconditions verified (N/A for M1)
+- [x] Postconditions: OC-1–OC-5 verifiable (imports, types, scale, theme structure, elevation)
+- [x] No uncommitted changes
+- [x] PROJECT_STATE.md updated
 
 **⏸ PAUSE — Human reviews before merge.**
 
@@ -265,10 +267,11 @@ git push origin dev
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| All tasks committed | ☐ Pass / ☐ Fail | |
-| Postconditions verified | ☐ Pass / ☐ Fail | |
-| Clean git status | ☐ Pass / ☐ Fail | |
-| PROJECT_STATE updated | ☐ Pass / ☐ Fail | |
+| All tasks committed | ☑ Pass | T0 skeleton approved; elevation gap addressed in Session 2 |
+| Postconditions verified | ☑ Pass | OC-1–OC-5 all pass |
+| Clean git status | ☑ Pass | All changes committed |
+| PROJECT_STATE updated | ☑ Pass | Updated 2026-02-21 |
+| 25 tests passing | ☑ Pass | 24 in contracts.test.ts (elevation assertions added to existing theme tests) + 1 in lovable-export |
 
-**Verification result:** ☐ PASS | ☐ FAIL
-**Verified by:** ________________ on ________________
+**Verification result:** ☑ PASS
+**Verified by:** Claude Code (Session 2) on 2026-02-21

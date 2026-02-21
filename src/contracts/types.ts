@@ -112,6 +112,21 @@ export interface ComponentBinding {
   nav: ComponentBindingMap;
 }
 
+// ─── Elevation ───────────────────────────────────────────────────────────────
+
+/**
+ * Three-level box-shadow scale. Values are CSS box-shadow strings.
+ * Confirmed required by FineTune (locked-token display) and Export (renderer output).
+ */
+export interface ElevationTokens {
+  /** Box shadow for small surfaces — cards, buttons */
+  sm: string;
+  /** Box shadow for medium surfaces — dropdowns, popovers */
+  md: string;
+  /** Box shadow for large surfaces — dialogs, sheets */
+  lg: string;
+}
+
 // ─── Export Config ───────────────────────────────────────────────────────────
 
 export type ExportFormat = "tailwind" | "css-vars" | "shadcn";
@@ -136,4 +151,6 @@ export interface DesignContract {
   shape: ShapeTokens;
   spacing: SpacingScale;
   componentBinding: ComponentBinding;
+  /** Box-shadow scale — confirmed by FineTune locked-token panel and Export renderers (M1 OC-5) */
+  elevation: ElevationTokens;
 }
