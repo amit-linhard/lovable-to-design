@@ -23,29 +23,31 @@
 
 ## Current Position
 
-**Active Iteration:** 1
-**Active Milestone:** M1 — Foundation & Data Model
-**Active Task:** ☑ All tasks complete — awaiting milestone merge gate (human review before merge to dev)
-**Branch:** `dev-i1`
-**Milestone Status:** ☑ Verification Pass — ready for merge
-**Task Status:** ☑ All 4 tasks complete (T0 skeleton approved; T1–T3 pre-complete; elevation added in Session 2)
+**Active Iteration:** 2
+**Active Milestone:** M2 — Canonical Preview Components
+**Active Task:** T0 ☑ Complete — ⏸ awaiting human review of skeleton before T1
+**Branch:** `dev-i2`
+**Milestone Status:** In Progress (T0 done; T1–T3 not started)
+**Task Status:** T0 ☑ Complete
 
 ---
 
 ## Last Completed Work
 
-**M1 Verification — Session 2** (2026-02-21)
+**M2 T0 Skeleton — Session 3** (2026-02-21)
 
-Session 2 (Build Contract Extraction) identified one gap in M1: `ElevationTokens` was missing from `DesignContract`. Added and verified:
+M2 Task 0: Created `src/components/preview/` with 7 files — 5 component stubs, 1 composite, 1 barrel.
 
-Files modified:
-- `src/contracts/types.ts` — Added `ElevationTokens` interface + `elevation` field on `DesignContract`
-- `src/contracts/themes.ts` — Added `elevation` values to all 4 theme stubs (theme-appropriate box-shadows)
-- `src/contracts/contracts.test.ts` — Added elevation assertions to 4 existing theme tests
+Files created:
+- `src/components/preview/PreviewButton.tsx` — stub (primary + ghost variant props)
+- `src/components/preview/PreviewCard.tsx` — stub
+- `src/components/preview/PreviewInput.tsx` — stub
+- `src/components/preview/PreviewNav.tsx` — stub
+- `src/components/preview/PaletteStrip.tsx` — stub (colors + size props)
+- `src/components/preview/ComponentPreview.tsx` — composite; wires colorOverride into effectiveColors
+- `src/components/preview/index.ts` — barrel re-exports all 6 components + their prop types
 
-Milestone docs updated (M1–M5) per Session 2 extraction. CHANGELOG_BUILDING.md extended with 5 new entries.
-
-Verification: `npm test` → 25/25 pass; `npm run typecheck` → clean
+Verification: `npm run typecheck` → clean; `npm test` → 25/25 pass
 
 ---
 
@@ -59,6 +61,15 @@ project-root/
 │   │   ├── spacing.ts          ← M1 T2: 4px scale, defaultComponentBinding
 │   │   ├── themes.ts           ← M1 T3: 4 themes with full tokens incl. elevation
 │   │   └── contracts.test.ts   ← 25 tests (24 in this file + 1 in lovable-export) — all passing
+│   ├── components/
+│   │   └── preview/            ← M2 T0: component stubs
+│   │       ├── PreviewButton.tsx
+│   │       ├── PreviewCard.tsx
+│   │       ├── PreviewInput.tsx
+│   │       ├── PreviewNav.tsx
+│   │       ├── PaletteStrip.tsx
+│   │       ├── ComponentPreview.tsx
+│   │       └── index.ts
 │   ├── App.tsx                 ← M1 T0: minimal app shell
 │   └── main.tsx                ← M1 T0: React entry point
 ├── docs/
@@ -89,7 +100,7 @@ project-root/
 | Milestone | Name | Status | Branch | Tasks Done / Total |
 | --- | --- | --- | --- | --- |
 | M1 | Foundation & Data Model | ☑ Complete | `dev-i1` | 4/4 (awaiting merge gate) |
-| M2 | Canonical Preview Components | Not Started | `dev-i2` | 0/4 |
+| M2 | Canonical Preview Components | In Progress | `dev-i2` | 1/4 |
 | M3 | Theme Library & Browse Screen | Not Started | `dev-i3` | 0/4 |
 | M4 | Preview Flow & Optional Brand Color | Not Started | `dev-i4` | 0/4 |
 | M5 | Output Format & Export | Not Started | `dev-i5` | 0/4 |
@@ -130,6 +141,7 @@ project-root/
 | --- | --- | --- | --- | --- | --- |
 | 1 | 2026-02-21 | M1 T0 (first session) | ⏸ M1 T0 skeleton gate | Initialized project scaffold, ran tests, updated all docs | Branch: dev-i1; 24/24 tests pass |
 | 2 | 2026-02-21 | Session 2: Build Contract Extraction | ☑ M1 verified + ready for merge | Session 2 extraction (4 objectives): schemas, state, screen specs, milestone alignment. Added ElevationTokens. Updated M1–M5 milestones + CHANGELOG. Ran tests + typecheck. | 25/25 tests pass; typecheck clean; M1 ready for merge gate |
+| 3 | 2026-02-21 | M2 T0 skeleton | ⏸ T0 skeleton gate | Created src/components/preview/ with 7 files (5 stubs + ComponentPreview + barrel). Typecheck clean; 25/25 pass. | Branch: dev-i2 |
 
 ---
 
@@ -142,24 +154,10 @@ For the agent starting a new session:
 3. Read `CHANGELOG_BUILDING.md` — entries 1–9 all affect downstream work
 4. Open `docs/milestones/milestone-1.md`
 
-**M1 is at the merge gate (verification passed):**
-- All postconditions OC-1–OC-5 verified. Tests pass. Typecheck clean.
-- Human must approve merge. Then:
-```bash
-git checkout dev
-git pull origin dev
-git merge dev-i1
-git push origin dev
-```
+**M2 T0 is at the skeleton review gate.**
+- Human reviews `src/components/preview/` stubs.
+- On approval: proceed to T1 (Button & Card + PaletteStrip).
 
-**If starting M2 (after M1 merged to dev):**
-```bash
-git checkout dev
-git pull origin dev
-git checkout -b dev-i2
-git push -u origin dev-i2
-```
-Verify M2 preconditions (PC-1–PC-3 in milestone-2.md) before starting Task 0.
-Note M2 scope additions from Session 2: PaletteStrip + colorOverride prop.
-
-⚠️ **M1 is complete and at the merge gate.** Do not start M2 until M1 is merged.
+**To resume T1:**
+Open `docs/milestones/milestone-2.md` → Task 1.
+Key reminders: PreviewCard uses `contract.elevation.sm`; PaletteStrip renders all 9 ColorTokens keys; colorOverride merges into effectiveColors (never mutate contract).

@@ -1,7 +1,7 @@
 # Milestone 2: Canonical Preview Components
 
 **Branch:** `dev-i2`
-**Status:** Not Started
+**Status:** In Progress
 **Created:** 2026-02-21
 **Last Updated:** 2026-02-21
 
@@ -47,9 +47,9 @@
 
 | # | Requirement | Provided By | How to Verify | Status |
 | --- | --- | --- | --- | --- |
-| PC-1 | DesignContract and token types importable | M1, OC-1 | Import from types module; compile | ☐ Not Checked |
-| PC-2 | Spacing scale and component bindings exist | M1, OC-3 | Scale and bindings exported | ☐ Not Checked |
-| PC-3 | Theme data structure available | M1, OC-4 | Theme module exists with correct shape | ☐ Not Checked |
+| PC-1 | DesignContract and token types importable | M1, OC-1 | Import from types module; compile | ☑ Pass |
+| PC-2 | Spacing scale and component bindings exist | M1, OC-3 | Scale and bindings exported | ☑ Pass |
+| PC-3 | Theme data structure available | M1, OC-4 | Theme module exists with correct shape | ☑ Pass |
 
 ---
 
@@ -79,7 +79,7 @@
 
 | Task # | Name | Status |
 | --- | --- | --- |
-| 0 | Create Milestone Skeleton | ☐ Not Started |
+| 0 | Create Milestone Skeleton | ☑ Complete |
 | 1 | Button & Card | ☐ Not Started |
 | 2 | Input & Nav | ☐ Not Started |
 | 3 | Token application | ☐ Not Started |
@@ -88,7 +88,7 @@
 
 ## Task 0: Create Milestone Skeleton
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete
 **Attempt:** 1 of 3
 
 ### Context
