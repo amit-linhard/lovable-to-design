@@ -25,29 +25,29 @@
 
 **Active Iteration:** 2
 **Active Milestone:** M2 — Canonical Preview Components
-**Active Task:** T0 ☑ Complete — ⏸ awaiting human review of skeleton before T1
+**Active Task:** T1 ☑ Complete — ready for T2
 **Branch:** `dev-i2`
-**Milestone Status:** In Progress (T0 done; T1–T3 not started)
-**Task Status:** T0 ☑ Complete
+**Milestone Status:** In Progress (T0+T1 done; T2–T3 not started)
+**Task Status:** T1 ☑ Complete
 
 ---
 
 ## Last Completed Work
 
-**M2 T0 Skeleton — Session 3** (2026-02-21)
+**M2 T1 Button & Card — Session 3** (2026-02-22)
 
-M2 Task 0: Created `src/components/preview/` with 7 files — 5 component stubs, 1 composite, 1 barrel.
+M2 Task 1: Implemented PreviewButton, PreviewCard, PaletteStrip with full token application.
+Also added vitest test-setup for @testing-library/jest-dom and 21 component tests.
 
-Files created:
-- `src/components/preview/PreviewButton.tsx` — stub (primary + ghost variant props)
-- `src/components/preview/PreviewCard.tsx` — stub
-- `src/components/preview/PreviewInput.tsx` — stub
-- `src/components/preview/PreviewNav.tsx` — stub
-- `src/components/preview/PaletteStrip.tsx` — stub (colors + size props)
-- `src/components/preview/ComponentPreview.tsx` — composite; wires colorOverride into effectiveColors
-- `src/components/preview/index.ts` — barrel re-exports all 6 components + their prop types
+Files modified/created:
+- `src/components/preview/PreviewButton.tsx` — primary + ghost; all tokens from contract
+- `src/components/preview/PreviewCard.tsx` — surface/elevation.sm/radius/border + label-value rows
+- `src/components/preview/PaletteStrip.tsx` — 9 labeled swatches at sm/md sizes
+- `src/components/preview/preview.test.tsx` — 21 tests (button 8, card 7, palette 6)
+- `src/test-setup.ts` — @testing-library/jest-dom/vitest import
+- `vite.config.ts` — added setupFiles
 
-Verification: `npm run typecheck` → clean; `npm test` → 25/25 pass
+Verification: `npm run typecheck` → clean; `npm test` → 46/46 pass
 
 ---
 
@@ -100,7 +100,7 @@ project-root/
 | Milestone | Name | Status | Branch | Tasks Done / Total |
 | --- | --- | --- | --- | --- |
 | M1 | Foundation & Data Model | ☑ Complete | `dev-i1` | 4/4 (awaiting merge gate) |
-| M2 | Canonical Preview Components | In Progress | `dev-i2` | 1/4 |
+| M2 | Canonical Preview Components | In Progress | `dev-i2` | 2/4 |
 | M3 | Theme Library & Browse Screen | Not Started | `dev-i3` | 0/4 |
 | M4 | Preview Flow & Optional Brand Color | Not Started | `dev-i4` | 0/4 |
 | M5 | Output Format & Export | Not Started | `dev-i5` | 0/4 |
@@ -142,6 +142,7 @@ project-root/
 | 1 | 2026-02-21 | M1 T0 (first session) | ⏸ M1 T0 skeleton gate | Initialized project scaffold, ran tests, updated all docs | Branch: dev-i1; 24/24 tests pass |
 | 2 | 2026-02-21 | Session 2: Build Contract Extraction | ☑ M1 verified + ready for merge | Session 2 extraction (4 objectives): schemas, state, screen specs, milestone alignment. Added ElevationTokens. Updated M1–M5 milestones + CHANGELOG. Ran tests + typecheck. | 25/25 tests pass; typecheck clean; M1 ready for merge gate |
 | 3 | 2026-02-21 | M2 T0 skeleton | ⏸ T0 skeleton gate | Created src/components/preview/ with 7 files (5 stubs + ComponentPreview + barrel). Typecheck clean; 25/25 pass. | Branch: dev-i2 |
+| 4 | 2026-02-22 | M2 T1 Button & Card | T2 next | Implemented PreviewButton/PreviewCard/PaletteStrip + 21 tests + jest-dom setup. | 46/46 pass |
 
 ---
 

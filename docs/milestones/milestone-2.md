@@ -80,7 +80,7 @@
 | Task # | Name | Status |
 | --- | --- | --- |
 | 0 | Create Milestone Skeleton | ☑ Complete |
-| 1 | Button & Card | ☐ Not Started |
+| 1 | Button & Card | ☑ Complete |
 | 2 | Input & Nav | ☐ Not Started |
 | 3 | Token application | ☐ Not Started |
 
@@ -110,7 +110,7 @@ Commit: `chore(milestone-2): scaffold skeleton — preview component stubs`
 
 ## Task 1: Button & Card
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete
 **Attempt:** 1 of 3
 
 ### Context
