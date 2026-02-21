@@ -1,4 +1,4 @@
-// M2 — Tests for PreviewButton, PreviewCard, PaletteStrip
+// M2 — Tests for PreviewButton, PreviewCard, PaletteStrip, PreviewInput, PreviewNav
 import { describe, it, expect, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 afterEach(cleanup);
@@ -7,6 +7,8 @@ import { cleanPro, warmEditorial } from "@contracts/themes";
 import { PreviewButton } from "./PreviewButton";
 import { PreviewCard } from "./PreviewCard";
 import { PaletteStrip } from "./PaletteStrip";
+import { PreviewInput } from "./PreviewInput";
+import { PreviewNav } from "./PreviewNav";
 
 // ─── PreviewButton ────────────────────────────────────────────────────────────
 
@@ -162,5 +164,125 @@ describe("PaletteStrip", () => {
     const { container } = render(<PaletteStrip colors={overriddenColors} size="md" />);
     const accentSwatch = container.querySelector("[data-color-key='accent'] [data-color-value]");
     expect(accentSwatch).toHaveStyle({ backgroundColor: "#FF0000" });
+  });
+});
+
+// ─── PreviewInput ─────────────────────────────────────────────────────────────
+
+describe("PreviewInput", () => {
+  it("renders without error", () => {
+    render(<PreviewInput contract={cleanPro} />);
+    expect(screen.getByTestId("preview-input")).toBeTruthy();
+  });
+
+  it("has border-radius from contract.shape.radiusMd", () => {
+    render(<PreviewInput contract={cleanPro} />);
+    expect(screen.getByTestId("preview-input")).toHaveStyle({
+      borderRadius: `${cleanPro.shape.radiusMd}px`,
+    });
+  });
+
+  it("focused=true: border uses focusRing color", () => {
+    render(<PreviewInput contract={cleanPro} focused={true} />);
+    expect(screen.getByTestId("preview-input")).toHaveStyle({
+      border: `${cleanPro.shape.borderWidth}px solid ${cleanPro.color.focusRing}`,
+    });
+  });
+
+  it("focused=false: border uses border color", () => {
+    render(<PreviewInput contract={cleanPro} focused={false} />);
+    expect(screen.getByTestId("preview-input")).toHaveStyle({
+      border: `${cleanPro.shape.borderWidth}px solid ${cleanPro.color.border}`,
+    });
+  });
+
+  it("focused=true: outline uses focusRing color and width from contract", () => {
+    render(<PreviewInput contract={cleanPro} focused={true} />);
+    expect(screen.getByTestId("preview-input")).toHaveStyle({
+      outline: `${cleanPro.shape.focusRingWidth}px solid ${cleanPro.color.focusRing}`,
+    });
+  });
+
+  it("applies contract font-family", () => {
+    render(<PreviewInput contract={cleanPro} />);
+    expect(screen.getByTestId("preview-input")).toHaveStyle({
+      fontFamily: cleanPro.typography.fontFamily,
+    });
+  });
+
+  it("colorOverride changes focusRing color", () => {
+    render(<PreviewInput contract={cleanPro} focused={true} colorOverride={{ focusRing: "#FF0000" }} />);
+    expect(screen.getByTestId("preview-input")).toHaveStyle({
+      outline: `${cleanPro.shape.focusRingWidth}px solid #FF0000`,
+    });
+  });
+
+  it("looks different with warmEditorial vs cleanPro", () => {
+    const { container: a } = render(<PreviewInput contract={cleanPro} />);
+    const { container: b } = render(<PreviewInput contract={warmEditorial} />);
+    const inputA = a.querySelector("[data-testid='preview-input']")! as HTMLElement;
+    const inputB = b.querySelector("[data-testid='preview-input']")! as HTMLElement;
+    expect(inputA.style.fontFamily).not.toBe(inputB.style.fontFamily);
+  });
+});
+
+// ─── PreviewNav ───────────────────────────────────────────────────────────────
+
+describe("PreviewNav", () => {
+  it("renders without error", () => {
+    render(<PreviewNav contract={cleanPro} />);
+    expect(screen.getByTestId("preview-nav")).toBeTruthy();
+  });
+
+  it("has surface color as background", () => {
+    render(<PreviewNav contract={cleanPro} />);
+    expect(screen.getByTestId("preview-nav")).toHaveStyle({
+      backgroundColor: cleanPro.color.surface,
+    });
+  });
+
+  it("renders default nav items", () => {
+    render(<PreviewNav contract={cleanPro} />);
+    expect(screen.getByText("Browse")).toBeTruthy();
+    expect(screen.getByText("Preview")).toBeTruthy();
+    expect(screen.getByText("Export")).toBeTruthy();
+  });
+
+  it("active item (index 0) has primary color", () => {
+    const { container } = render(<PreviewNav contract={cleanPro} activeIndex={0} />);
+    const activeItem = container.querySelector("[data-active='true']")! as HTMLElement;
+    expect(activeItem).toHaveStyle({ color: cleanPro.color.primary });
+  });
+
+  it("inactive items have textSecondary color", () => {
+    const { container } = render(<PreviewNav contract={cleanPro} activeIndex={0} />);
+    const inactive = Array.from(container.querySelectorAll("[data-active='false']")) as HTMLElement[];
+    expect(inactive.length).toBe(2);
+    inactive.forEach((el) =>
+      expect(el).toHaveStyle({ color: cleanPro.color.textSecondary })
+    );
+  });
+
+  it("colorOverride changes active item color", () => {
+    const { container } = render(
+      <PreviewNav contract={cleanPro} activeIndex={0} colorOverride={{ primary: "#FF0000" }} />
+    );
+    const activeItem = container.querySelector("[data-active='true']")! as HTMLElement;
+    expect(activeItem).toHaveStyle({ color: "#FF0000" });
+  });
+
+  it("applies contract font-family", () => {
+    render(<PreviewNav contract={cleanPro} />);
+    expect(screen.getByTestId("preview-nav")).toHaveStyle({
+      fontFamily: cleanPro.typography.fontFamily,
+    });
+  });
+
+  it("looks different with warmEditorial vs cleanPro", () => {
+    const { container: a } = render(<PreviewNav contract={cleanPro} />);
+    const { container: b } = render(<PreviewNav contract={warmEditorial} />);
+    const navA = a.querySelector("[data-testid='preview-nav']")! as HTMLElement;
+    const navB = b.querySelector("[data-testid='preview-nav']")! as HTMLElement;
+    expect(navA.style.fontFamily).not.toBe(navB.style.fontFamily);
   });
 });

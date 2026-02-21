@@ -81,7 +81,7 @@
 | --- | --- | --- |
 | 0 | Create Milestone Skeleton | ☑ Complete |
 | 1 | Button & Card | ☑ Complete |
-| 2 | Input & Nav | ☐ Not Started |
+| 2 | Input & Nav | ☑ Complete |
 | 3 | Token application | ☐ Not Started |
 
 ---
@@ -142,7 +142,7 @@ After 3 attempts: STOP; log; flag.
 
 ## Task 2: Input & Nav
 
-**Status:** ☐ Not Started
+**Status:** ☑ Complete
 **Attempt:** 1 of 3
 
 ### Context
