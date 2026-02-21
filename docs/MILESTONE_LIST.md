@@ -1,13 +1,6 @@
 # Design Contract Hub — Milestone List
 
-> **Purpose:** Translate PRD solutions into a sequenced list of milestones with enough context
-> to generate full milestone files. This is the bridge between "what to build" and "how to build it."
->
-> **When to create:** After the PRD's Solutions Prioritization is stable.
-> **When to update:** When milestones are re-sequenced, merged, or split.
-
 **Project:** Design Contract Hub
-**PRD Version:** 1.0 — Draft (design-contract-hub-prd)
 **Created:** 2026-02-21
 **Last Updated:** 2026-02-21
 
